@@ -1,0 +1,79 @@
+Commands
+----------
+go->back->read
+
+Cryptosystem
+---------------
+Playfair cipher
+
+
+Analysis
+---------
+We performed frequency analysis on the ciphertext and following is the result:
+Frequency Analysis:
+-------------------
+a - 9.71429%
+f - 8%
+t - 7.42857%
+s - 6.85714%
+m - 6.85714%
+c - 6.85714%
+e - 6.85714%
+u - 6.28571%
+h - 5.71429%
+n - 4%
+i - 4%
+o - 4%
+y - 4%
+b - 2.85714%
+v - 2.85714%
+x - 2.28571%
+r - 2.28571%
+q - 2.28571%
+k - 1.71429%
+l - 1.71429%
+p - 1.71429%
+w - 1.14286%
+g - 0.571429%
+
+Most of the letters have the same frequencies. We found that the frequency of letters are not following the frequency distribution of English text. So we concluded that cryptosystem is not Substitution or Permutation but something like Vigenere, Playfair, etc. The game itself gave us the hint that cipher is Playfair from the following message from the Cave Man - 
+
+"You have been blessed, my child. Keep in mind that you must always believe in yourself and PLAY FAIR".
+
+Last two words are "PLAY FAIR" itself so we tried the play fair cipher and it worked. For Playfair cipher we need a key. The key was provided to use by the game itself. Key was written on the boulder in terms of the symbol - 
+" ... . -.-. ..- .-. .. - -.-- "
+
+These symbols are no other than ITU Morse Code and which translates to "SECURITY". So we used the "SECURITY" as the key to solving Playfair ciphertext given to us.
+
+
+
+Decryption Algorithm
+--------------------
+Playfair is the decryption algorithm used. It is a type of block cipher where the block size is fixed to two. It is symmetric encryption where each block is encrypted using a shared key. It creates a 5x5 matrix by first filling the matrix from the top and left to right with letters of the key and rest of the table is filled by the remaining letters of the alphabets in order. "J" is not used as there is space for only 25 letters. 
+
+We wrote a C++ program for decrypting the ciphertext and it is submitted under Q7. Program decrypts as per the technique explain below:
+Step 1: To decrypt we require to partition the ciphertext into blocks of two letters. Following algorithm won't work if a block contains two consecutive letters, so after making these blocks we made sure that no such block exists, there were no such case if it did, we would have added an additional letter 'X' in between. These blocks are then substituted according to the following rules:
+a. If both the letters of the block are in the same column of the matrix, then substitute each letter with the letter above it in the matrix.
+b. If both the letters of the block are in the same row of the matrix, then substitute each letter with the letter to the left of it in the matrix.
+c. If the letters are not on the same row or column, then form a rectangle with these two letters and replace them by the letters on the horizontal opposite corner of the rectangle.
+
+Step 2: Once we have deciphered text after substitution of all the blocks, we look for words having the letter "I" to make sure that these words exist. If not, then we shall substitute it with the letter 'I' as if 'J' is present in the message, it is substituted with 'I' during encryption. So we found the word "IOY" and it seems to make the word0 "JOY", so substituted it. 
+
+Step 3: At the time encryption, if two consecutive letters in a block are same then letter 'X' is placed in between them in the message. So to get the original message, we looked for the words having letter 'X' throughout the deciphered text and checked whether these words exist in the English language or not. If not, then we removed these 'X's from the message. Following such cases were found: 
+	XTHE => THE
+	XYOU => YOU
+	WILXL => WILL
+	NEXED => NEED
+
+ 
+Plain Text Deciphered
+----------------------
+BE WARY OF THE NEXT CHAMBER, THERE IS VERY LITTLE JOY THERE. SPEAK OUT THE PASSWORD "OPEN_SESAME" TO GO THROUGH. MAY YOU HAVE THE STRENGTH FOR THE NEXT CHAMBER. TO FIND THE EXIT YOU FIRST WILL NEED TO UTTER MAGIC WORDS THERE
+
+
+
+Password
+----------
+OPEN_SESAME
+
+
